@@ -7,73 +7,65 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1208;
     --parchment: #f5eed8;
     --rust: #8b3a1a;
     --gold: #b8860b;
     --ash: #6b6050;
+    --bg: #130d06;
+    --card: rgba(255,255,255,0.03);
+    --border: rgba(184,134,11,0.18);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #130d06;
+    background: var(--bg);
     color: var(--parchment);
     font-family: 'EB Garamond', Georgia, serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 48px 24px 64px;
+    padding: 56px 24px 80px;
   }
 
-  /* Top and bottom rules */
-  .top-rule {
+  /* Gold rules */
+  .top-rule, .bottom-rule {
     position: fixed;
-    top: 0; left: 0; right: 0;
+    left: 0; right: 0;
     height: 4px;
     background: linear-gradient(90deg, transparent, var(--gold), var(--rust), var(--gold), transparent);
   }
-  .bottom-rule {
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, var(--gold), var(--rust), var(--gold), transparent);
-  }
+  .top-rule { top: 0; }
+  .bottom-rule { bottom: 0; }
 
-  .container {
+  /* ── HERO ── */
+  .hero {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 480px;
+    text-align: center;
     width: 100%;
+    max-width: 460px;
     opacity: 0;
-    animation: fadeIn 1.4s 0.3s ease forwards;
+    animation: fadeIn 1.2s 0.2s ease forwards;
   }
 
-  /* Sword image */
   .sword-image {
-    width: min(280px, 65vw);
+    width: min(240px, 58vw);
     height: auto;
     display: block;
-    margin: 0 auto 44px;
-    filter: drop-shadow(0 8px 40px rgba(184,134,11,0.25));
-  }
-
-  /* Title block */
-  .title-block {
-    text-align: center;
-    margin-bottom: 32px;
+    margin: 0 auto 40px;
+    filter: drop-shadow(0 8px 40px rgba(184,134,11,0.28));
   }
 
   .series-label {
     font-family: 'EB Garamond', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.35em;
+    font-size: 0.7rem;
+    letter-spacing: 0.38em;
     text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
+    color: rgba(184,134,11,0.65);
+    margin-bottom: 14px;
     display: block;
   }
 
@@ -84,7 +76,7 @@
     color: var(--parchment);
     letter-spacing: 0.02em;
     line-height: 1.05;
-    margin-bottom: 0;
+    margin-bottom: 28px;
   }
 
   /* Divider */
@@ -93,100 +85,133 @@
     align-items: center;
     gap: 12px;
     justify-content: center;
-    margin: 24px 0;
     width: 100%;
+    margin-bottom: 28px;
   }
-  .divider-line {
-    flex: 1;
-    max-width: 80px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold));
-  }
-  .divider-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
-  .divider-gem {
-    width: 6px; height: 6px;
-    background: var(--gold);
-    transform: rotate(45deg);
-    flex-shrink: 0;
-  }
+  .dl { flex: 1; max-width: 72px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .dl.r { background: linear-gradient(90deg, var(--gold), transparent); }
+  .dg { width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); flex-shrink: 0; }
 
-  /* Verse */
-  .verse-ref {
-    font-family: 'EB Garamond', serif;
-    font-style: italic;
-    font-size: 1rem;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-
-  .verse-text {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 1.08rem;
-    color: rgba(245,238,216,0.75);
-    line-height: 1.72;
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto 32px;
-  }
-
-  /* Verse display */
+  /* Verse block */
   .verse-block {
     position: relative;
-    min-height: 130px;
+    min-height: 120px;
     width: 100%;
-    max-width: 400px;
-    margin: 0 auto 32px;
-    text-align: center;
+    max-width: 380px;
+    margin-bottom: 36px;
   }
   .verse-slide {
     position: absolute;
     top: 0; left: 0; right: 0;
     opacity: 0;
     transition: opacity 1.2s ease;
+    text-align: center;
   }
   .verse-slide.active { opacity: 1; }
-
-  /* Begin reading link */
-  .begin-link {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 14px 36px;
-    border: 1px solid rgba(184,134,11,0.5);
-    color: var(--gold);
+  .verse-ref {
     font-family: 'EB Garamond', serif;
-    font-size: 0.82rem;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    text-align: center;
-  }
-  .begin-link:hover {
-    background: rgba(184,134,11,0.12);
-    border-color: var(--gold);
-    color: #f5eed8;
-  }
-  .begin-sub {
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
     display: block;
+  }
+  .verse-text {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    font-size: 0.78rem;
-    color: rgba(245,238,216,0.35);
-    margin-top: 12px;
-    letter-spacing: 0.05em;
+    font-size: 1rem;
+    color: rgba(245,238,216,0.7);
+    line-height: 1.72;
+  }
+
+  /* ── ARTICLE LIST ── */
+  .series-section {
+    width: 100%;
+    max-width: 460px;
+    margin-top: 8px;
+    opacity: 0;
+    animation: fadeIn 1.2s 0.6s ease forwards;
+  }
+
+  .series-section-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(184,134,11,0.45);
     text-align: center;
+    display: block;
+    margin-bottom: 18px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(184,134,11,0.15);
+  }
+
+  .article-card {
+    display: block;
+    text-decoration: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid rgba(184,134,11,0.2);
+    padding: 18px 20px;
+    margin-bottom: 8px;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .article-card:last-child { margin-bottom: 0; }
+
+  .article-card:hover {
+    background: rgba(184,134,11,0.07);
+    border-left-color: var(--gold);
+    transform: translateX(3px);
+  }
+
+  .article-card:hover .card-title { color: #f5eed8; }
+  .article-card:hover .card-num { color: var(--gold); }
+  .article-card:hover .card-arrow { opacity: 1; }
+
+  .card-num {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(184,134,11,0.35);
+    display: block;
+    margin-bottom: 5px;
+    transition: color 0.25s ease;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: rgba(245,238,216,0.65);
+    line-height: 1.4;
+    transition: color 0.25s ease;
+    display: block;
+    padding-right: 24px;
+  }
+
+  .card-arrow {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.25s ease;
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  @media (max-width: 380px) {
-    .sword-image { width: 70vw; }
+  @media (max-width: 400px) {
+    .sword-image { width: 64vw; }
+    body { padding: 48px 16px 72px; }
   }
 </style>
 </head>
@@ -195,34 +220,65 @@
 <div class="top-rule"></div>
 <div class="bottom-rule"></div>
 
-<div class="container">
+<div class="hero">
 
-  <img src="sword.png" alt="Two-edged sword engraved with 2 Timothy 2:15 and Hebrews 4:12" class="sword-image">
+  <img src="sword.png" alt="Rightly Divided — Two-edged sword" class="sword-image">
 
-  <div class="title-block">
-    <span class="series-label">A Bible Study Series</span>
-    <h1>Rightly Divided</h1>
-  </div>
+  <span class="series-label">A Bible Study Series</span>
+  <h1>Rightly Divided</h1>
 
   <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-gem"></div>
-    <div class="divider-line r"></div>
+    <div class="dl"></div>
+    <div class="dg"></div>
+    <div class="dl r"></div>
   </div>
 
   <div class="verse-block">
-    <div class="verse-slide active" id="verse1">
-      <p class="verse-ref">2 Timothy 2:15</p>
+    <div class="verse-slide active">
+      <span class="verse-ref">2 Timothy 2:15</span>
       <p class="verse-text">"Study to shew thyself approved unto God, a workman that needeth not to be ashamed, rightly dividing the word of truth."</p>
     </div>
-    <div class="verse-slide" id="verse2">
-      <p class="verse-ref">Hebrews 4:12</p>
+    <div class="verse-slide">
+      <span class="verse-ref">Hebrews 4:12</span>
       <p class="verse-text">"For the word of God is quick, and powerful, and sharper than any twoedged sword, piercing even to the dividing asunder of soul and spirit."</p>
     </div>
   </div>
 
-  <a href="book-of-enoch.html" class="begin-link">Begin Reading</a>
-  <span class="begin-sub">Article One — The Question the Book of Enoch Cannot Answer</span>
+</div>
+
+<div class="series-section">
+
+  <span class="series-section-label">The Series</span>
+
+  <a href="book-of-enoch.html" class="article-card">
+    <span class="card-num">Article I</span>
+    <span class="card-title">The Question the Book of Enoch Cannot Answer</span>
+    <span class="card-arrow">›</span>
+  </a>
+
+  <a href="when-the-witnesses-disagree.html" class="article-card">
+    <span class="card-num">Article II</span>
+    <span class="card-title">When the Witnesses Disagree</span>
+    <span class="card-arrow">›</span>
+  </a>
+
+  <a href="two-different-plains.html" class="article-card">
+    <span class="card-num">Article III</span>
+    <span class="card-title">Two Different Plains</span>
+    <span class="card-arrow">›</span>
+  </a>
+
+  <a href="the-verdict.html" class="article-card">
+    <span class="card-num">Article IV</span>
+    <span class="card-title">The Verdict</span>
+    <span class="card-arrow">›</span>
+  </a>
+
+  <a href="the-whole-gospel.html" class="article-card">
+    <span class="card-num">Article V</span>
+    <span class="card-title">The Whole Gospel</span>
+    <span class="card-arrow">›</span>
+  </a>
 
 </div>
 
