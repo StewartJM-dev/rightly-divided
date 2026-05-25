@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Verdict — Rightly Divided</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --parchment: #f5eed8;
+    --aged: #e8ddc0;
+    --rust: #8b3a1a;
+    --gold: #b8860b;
+    --ash: #6b6050;
+    --cream: #faf6eb;
+    --deep: #1c1108;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(184,134,11,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(139,58,26,0.06) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    min-height: 100vh;
+    padding: 0 0 100px;
+  }
+
+  /* ── SERIES NAV ── */
+  .series-nav {
+    background: var(--ink);
+    text-align: center;
+    padding: 10px 24px;
+  }
+  .series-nav p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    line-height: 1.8;
+  }
+  .series-nav a {
+    color: rgba(245,238,216,0.55);
+    text-decoration: none;
+    margin: 0 6px;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+  }
+  .series-nav a:hover { color: var(--gold); }
+  .series-nav .current { color: var(--gold); border-bottom: 1px solid var(--gold); }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 64px 24px 52px;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--rust) 50%, var(--gold) 70%, transparent 100%);
+  }
+  .kicker {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s ease forwards;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.1rem, 6.5vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.08;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 0 auto 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.25s ease forwards;
+  }
+  h1 em { font-style: italic; color: var(--rust); }
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.18rem;
+    color: var(--ash);
+    max-width: 600px;
+    margin: 0 auto 28px;
+    line-height: 1.65;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+  .byline {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: var(--ash);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s ease forwards;
+  }
+  .byline span { color: var(--rust); font-weight: 500; }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+    margin: 0 0 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.58s ease forwards;
+  }
+  .divider-line { width: 90px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .divider-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
+  .divider-gem { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); }
+
+  /* ── ARTICLE ── */
+  article { max-width: 700px; margin: 0 auto; padding: 0 24px; }
+
+  .lead {
+    font-size: 1.28rem;
+    line-height: 1.78;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.65s ease forwards;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.88;
+    margin-bottom: 24px;
+    color: #28190e;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+  p.vis { animation-play-state: running; }
+
+  /* ── SCRIPTURE ── */
+  .scripture {
+    margin: 40px 0;
+    padding: 28px 32px 28px 44px;
+    border-left: 3px solid var(--rust);
+    background: rgba(139,58,26,0.045);
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  .scripture.vis { animation-play-state: running; }
+  .scripture::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px; left: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 5.5rem;
+    color: var(--rust);
+    opacity: 0.18;
+    line-height: 1;
+  }
+  .scripture-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.78;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .scripture-ref {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 500;
+  }
+
+  /* ── SECTION HEADERS ── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.72rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 56px 0 22px;
+    line-height: 1.25;
+    position: relative;
+    padding-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  h2.vis { animation-play-state: running; }
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 52px; height: 2px;
+    background: var(--gold);
+  }
+
+  /* ── THREAD BOX — the unbroken salvation thread ── */
+  .thread {
+    margin: 48px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+    position: relative;
+  }
+  .thread.vis { animation-play-state: running; }
+  .thread-label {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+  }
+  .thread-line {
+    position: absolute;
+    left: 28px;
+    top: 42px;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--gold), var(--rust));
+  }
+  .thread-item {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(184,134,11,0.15);
+    background: var(--cream);
+    position: relative;
+  }
+  .thread-item:last-child { border-bottom: none; }
+  .thread-dot-col {
+    width: 58px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 20px;
+  }
+  .thread-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .thread-content {
+    flex: 1;
+    padding: 18px 18px 18px 0;
+  }
+  .thread-ref {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 6px;
+  }
+  .thread-verse {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  .thread-note {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    color: var(--ash);
+    line-height: 1.6;
+  }
+
+  /* ── ACID TEST BOX ── */
+  .acid-test {
+    background: var(--deep);
+    border-top: 3px solid var(--gold);
+    padding: 36px 32px;
+    margin: 52px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .acid-test.vis { animation-play-state: running; }
+  .acid-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .acid-test h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f0e4c8;
+    margin-bottom: 28px;
+    line-height: 1.35;
+  }
+  .acid-row {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    align-items: flex-start;
+  }
+  .acid-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .acid-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 36px;
+    opacity: 0.6;
+  }
+  .acid-content { flex: 1; }
+  .acid-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: #f0e4c8;
+    margin-bottom: 8px;
+  }
+  .acid-desc {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    color: #d8c8a8;
+    line-height: 1.7;
+  }
+  .acid-desc em {
+    font-style: italic;
+    color: #f0e4c8;
+  }
+
+  /* ── CONTRAST TABLE ── */
+  .salvation-contrast {
+    margin: 48px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+    border: 1px solid rgba(184,134,11,0.2);
+  }
+  .salvation-contrast.vis { animation-play-state: running; }
+  .sc-header {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    background: var(--ink);
+    gap: 1px;
+  }
+  .sc-header-cell {
+    padding: 12px 14px;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .sc-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 1px;
+    border-bottom: 1px solid rgba(184,134,11,0.12);
+    background: rgba(184,134,11,0.08);
+  }
+  .sc-row:last-child { border-bottom: none; }
+  .sc-topic {
+    grid-column: 1 / -1;
+    background: var(--rust);
+    color: var(--cream);
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 7px 14px;
+  }
+  .sc-cell {
+    padding: 14px 14px;
+    font-family: 'EB Garamond', serif;
+    font-size: 0.97rem;
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--cream);
+  }
+  .sc-cell.scripture-col {
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .sc-cell.apocrypha-col { background: var(--aged); }
+  .sc-cell.gnostic-col { background: #f0e8dc; color: var(--rust); }
+  @media (max-width: 520px) {
+    .sc-header, .sc-row { grid-template-columns: 1fr; }
+    .sc-topic { grid-column: 1; }
+    .sc-header-cell:not(:first-child) { display: none; }
+  }
+
+  /* ── VERDICT BOX ── */
+  .verdict {
+    background: var(--aged);
+    border: 1px solid rgba(184,134,11,0.3);
+    border-left: 5px solid var(--gold);
+    padding: 36px 30px;
+    margin: 52px 0;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .verdict.vis { animation-play-state: running; }
+  .verdict-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .verdict h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 18px;
+    line-height: 1.3;
+  }
+  .verdict p { margin-bottom: 14px; opacity: 1; animation: none; color: #28190e; }
+  .verdict p:last-child { margin-bottom: 0; }
+
+  /* ── INVITATION BOX ── */
+  .invitation {
+    background: var(--rust);
+    padding: 44px 36px;
+    margin: 52px 0 0;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .invitation.vis { animation-play-state: running; }
+  .invitation-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(250,240,220,0.65);
+    margin-bottom: 20px;
+  }
+  .invitation h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #faf0dc;
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+  .invitation p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.12rem;
+    color: rgba(250,240,220,0.9);
+    line-height: 1.78;
+    max-width: 520px;
+    margin: 0 auto 20px;
+    opacity: 1;
+    animation: none;
+  }
+  .invitation .inv-verse {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.22rem;
+    color: #faf0dc;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 28px auto 12px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(250,240,220,0.2);
+  }
+  .invitation .inv-ref {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(250,240,220,0.6);
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion {
+    margin-top: 56px;
+    padding-top: 44px;
+    border-top: 1px solid rgba(184,134,11,0.35);
+  }
+  .conclusion p { font-size: 1.12rem; }
+
+  footer {
+    text-align: center;
+    margin-top: 64px;
+    padding: 0 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  footer.vis { animation-play-state: running; }
+  footer .divider { margin-bottom: 22px; opacity: 1; animation: none; }
+  footer p { font-family: 'EB Garamond', serif; font-style: italic; color: var(--ash); font-size: 0.92rem; opacity: 1; animation: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 52px 18px 40px; }
+    article { padding: 0 18px; }
+    .scripture { padding: 22px 18px 22px 28px; }
+    .acid-test, .invitation { padding: 28px 20px; }
+    .verdict { padding: 26px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="series-nav">
+  <p>Rightly Divided &nbsp;·&nbsp;
+    <a href="book-of-enoch.html">Article One</a> &nbsp;·&nbsp;
+    <a href="when-the-witnesses-disagree.html">Article Two</a> &nbsp;·&nbsp;
+    <a href="two-different-plains.html">Article Three</a> &nbsp;·&nbsp;
+    <span class="current">Article Four</span>
+  </p>
+</div>
+
+<header>
+  <p class="kicker">Rightly Divided — Article Four</p>
+  <h1>The <em>Verdict</em></h1>
+  <p class="subtitle">The court has been in session since article one. Every witness has been examined. Every contradiction documented. Every honest admission recorded. Now the jury has everything it needs.</p>
+  <p class="byline">By <span>John Stewart</span></p>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-gem"></div>
+    <div class="divider-line r"></div>
+  </div>
+</header>
+
+<article>
+
+  <p class="lead">In a court of law all the witnesses cannot be right when they contradict each other. A jury does not simply choose the testimony it finds most interesting or most dramatic. It applies a standard — do the witnesses agree? Does the testimony hold together under examination? Does it verify itself? Does it contradict what is already established as true?</p>
+
+  <p>That is exactly what the men who established the canon of Scripture did. They were not politicians protecting institutional power. They were not suppressing inconvenient truths. They were examining witnesses — sixty-six books, forty authors, fifteen hundred years — and asking whether the testimony held together. Whether it agreed with itself. Whether it verified itself across time and authorship and circumstance. Whether it contradicted what they already knew to be established truth.</p>
+
+  <p>Three articles have prepared the ground for this one. We have examined what cannot be trusted and why. We have heard the honest admissions of the apocrypha about its own limitations. We have seen the Gnostic counterfeit named and identified. And now there is one question left — the most important question any human being ever asks.</p>
+
+  <p><em>How is a person saved?</em></p>
+
+  <p>Every religious text that has ever existed must answer this question. The answer it gives is the most revealing thing about it. And the answer given by canonical Scripture — consistent, unbroken, freely offered, available to all — is unlike anything else in the history of human literature.</p>
+
+  <h2>The Acid Test</h2>
+
+  <p>Before we lay the evidence out there is a standard to establish. Every claim about salvation — from canonical Scripture, from the apocrypha, from Gnostic literature — must pass the same three-part test. Not because we invented the test. Because the nature of God and the condition of humanity demand it.</p>
+
+  <div class="acid-test">
+    <p class="acid-label">The Three-Part Standard</p>
+    <h3>If salvation is from God it must pass all three. Every time. Without exception.</h3>
+    <div class="acid-row">
+      <div class="acid-number">1</div>
+      <div class="acid-content">
+        <p class="acid-title">The Simplicity Test</p>
+        <p class="acid-desc">Can any person regardless of education, status, or spiritual achievement receive it? A dying thief on a cross beside Jesus had minutes to live and no time for ritual, study, or earned merit. A child in a Sunday school class. A mechanic in Pennsylvania. An illiterate shepherd in first century Judea. If salvation requires secret knowledge, elite initiation, or accumulated merit — it fails. <em>If it requires only faith — it passes.</em></p>
+      </div>
+    </div>
+    <div class="acid-row">
+      <div class="acid-number">2</div>
+      <div class="acid-content">
+        <p class="acid-title">The Consistency Test</p>
+        <p class="acid-desc">Does the salvation message in Genesis match the one in Revelation? Does every witness across fifteen hundred years — law, poetry, prophecy, gospel, epistle — point to the same answer? If any book contradicts the testimony the testimony cannot be trusted. <em>If they all agree — the weight of that agreement is itself evidence.</em></p>
+      </div>
+    </div>
+    <div class="acid-row">
+      <div class="acid-number">3</div>
+      <div class="acid-content">
+        <p class="acid-title">The Universality Test</p>
+        <p class="acid-desc">Is it available to all? Every tribe, tongue, people and nation. The ground level at the foot of the cross. If salvation belongs only to the spiritually elite, the properly initiated, or those who find what was hidden — it fails. <em>Whosoever will. If those two words are true — it passes.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <p>Apply that test now. Apply it to everything. And let the evidence speak for itself.</p>
+
+  <h2>What Scripture Says — The Unbroken Thread</h2>
+
+  <p>The most remarkable thing about Scripture's testimony on salvation is not any single verse. It is the consistency of the testimony across fifteen hundred years of writing by dozens of authors who never met each other, writing in different languages, in different countries, under different circumstances — and arriving at the same answer every time.</p>
+
+  <p>This is not coincidence. Coincidence does not produce this kind of agreement across this kind of distance. This is the fingerprint of a single Author working through many hands.</p>
+
+  <div class="thread">
+    <div class="thread-label">The Salvation Thread — Genesis to Revelation</div>
+    <div class="thread-line"></div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Genesis 3:15 — ~1440 BCE</p>
+        <p class="thread-verse">"I will put enmity between thee and the woman, and between thy seed and her seed; it shall bruise thy head, and thou shalt bruise his heel."</p>
+        <p class="thread-note">The first gospel. The first promise of redemption. A specific person coming from a specific woman to crush the enemy's power at personal cost. Written before the Law, before the Temple, before Israel existed as a nation. The thread begins here.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Genesis 15:6 — ~2000 BCE</p>
+        <p class="thread-verse">"And he believed in the LORD; and he counted it to him for righteousness."</p>
+        <p class="thread-note">Abraham. Before Moses. Before the Law. Before circumcision. Salvation by faith — not by works, not by ritual, not by knowledge. Paul quotes this in Romans 4 to demonstrate that salvation has always operated on the same basis. The thread holds.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Leviticus 17:11 — ~1440 BCE</p>
+        <p class="thread-verse">"For the life of the flesh is in the blood: and I have given it to you upon the altar to make an atonement for your souls: for it is the blood that maketh an atonement for the soul."</p>
+        <p class="thread-note">The entire sacrificial system points forward. Blood must be shed. A substitute must die. The penalty for sin must be paid by something other than the sinner. Every sacrifice in Israel's history is a picture of what is coming. The thread holds.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Isaiah 53:4–6 — ~700 BCE</p>
+        <p class="thread-verse">"Surely he hath borne our griefs, and carried our sorrows… he was wounded for our transgressions, he was bruised for our iniquities… and the LORD hath laid on him the iniquity of us all."</p>
+        <p class="thread-note">Written seven hundred years before the crucifixion. Not a vague spiritual principle. A specific person bearing a specific penalty for specific sinners. When Jesus died on the cross Isaiah had already described it in detail. The thread holds.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">John 3:16 — ~90 CE</p>
+        <p class="thread-verse">"For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life."</p>
+        <p class="thread-note">Whosoever believeth. Not the initiated. Not the enlightened. Not those who have earned it. Whosoever. The universality test passes in four words. The thread holds.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Romans 3:23–24 — ~57 CE</p>
+        <p class="thread-verse">"For all have sinned, and come short of the glory of God; being justified freely by his grace through the redemption that is in Christ Jesus."</p>
+        <p class="thread-note">All sinned. All need it. All can have it. Freely. By grace. Through redemption. The simplicity test passes — no secret knowledge required, no merit accumulated, no initiation completed. Just grace freely given. The thread holds.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Ephesians 2:8–9 — ~62 CE</p>
+        <p class="thread-verse">"For by grace are ye saved through faith; and that not of yourselves: it is the gift of God: not of works, lest any man should boast."</p>
+        <p class="thread-note">Grace. Faith. Gift. Not of yourselves. Not of works. This verse closes every door that human effort tries to open. Salvation cannot be earned, bought, inherited, initiated into, or achieved through accumulated religious merit. It is given. The thread holds.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Romans 10:9–10 — ~57 CE</p>
+        <p class="thread-verse">"That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved."</p>
+        <p class="thread-note">This is the acid test in a single verse. Confess. Believe. That is the requirement. Not secret knowledge. Not earned merit. Not elite initiation. Not prayer for the dead. Not almsgiving. Confess and believe. A dying thief can do this. A child can do this. A mechanic can do this. Whosoever will can do this. All three tests pass simultaneously.</p>
+      </div>
+    </div>
+    <div class="thread-item">
+      <div class="thread-dot-col"><div class="thread-dot"></div></div>
+      <div class="thread-content">
+        <p class="thread-ref">Revelation 22:17 — ~95 CE</p>
+        <p class="thread-verse">"And the Spirit and the bride say, Come. And let him that heareth say, Come. And let him that is athirst come. And whosoever will, let him take the water of life freely."</p>
+        <p class="thread-note">The last invitation in the last book of Scripture. The thread that began in Genesis 3 ends here — and it ends with the same open door it opened with. Whosoever will. Freely. The thread is unbroken across fifteen hundred years. No other body of literature in human history can make that claim.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>What the Others Say — Placing Every Witness on Trial</h2>
+
+  <p>Now apply the same acid test to what the apocryphal and Gnostic texts say about salvation. Not to attack them. Not to dismiss them unfairly. But because the court requires that every witness answer the same questions under the same standard.</p>
+
+  <div class="salvation-contrast">
+    <div class="sc-header">
+      <div class="sc-header-cell">The Question</div>
+      <div class="sc-header-cell">Scripture's Answer</div>
+      <div class="sc-header-cell">The Alternatives</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-topic">How is sin atoned for?</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-cell scripture-col">By the blood of Christ — substitutionary atonement, once for all. Hebrews 9:22 — without shedding of blood is no remission.</div>
+      <div class="sc-cell apocrypha-col">Sirach 3:3 — honor your father and atone for sins. Sirach 29:12 — almsgiving rescues from disaster. Tobit 12:9 — almsgiving delivers from death and purges every sin.</div>
+      <div class="sc-cell gnostic-col">Sin is an illusion — a product of the evil material world. Escape the material through gnosis. No blood. No substitute. No atonement required.</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-topic">Can we pray for the dead?</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-cell scripture-col">Hebrews 9:27 — it is appointed unto men once to die, but after this the judgment. The moment of death is the moment of accountability. Scripture offers no mechanism for post-mortem salvation.</div>
+      <div class="sc-cell apocrypha-col">2 Maccabees 12:44–46 — Judas Maccabeus makes atonement for dead soldiers so they might be delivered from sin. The primary biblical argument for purgatory. One book. No canonical parallel.</div>
+      <div class="sc-cell gnostic-col">Death is liberation from the material prison. The divine spark returns to the true God. No judgment. No accountability. The concept of praying for the dead is irrelevant.</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-topic">Who can be saved?</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-cell scripture-col">Whosoever will — John 3:16, Romans 10:13, Revelation 22:17. No qualification. No elite status. Every tribe tongue people and nation. The ground is level at the cross.</div>
+      <div class="sc-cell apocrypha-col">Wisdom of Solomon — immortality comes to those who have wisdom and righteousness. Works and wisdom as the basis. Narrows the door by attaching human achievement to the requirement.</div>
+      <div class="sc-cell gnostic-col">Only the spiritually enlightened — those capable of receiving gnosis. The common people in the mainstream church are trapped in ignorance. Salvation reserved for the elite by definition.</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-topic">What is required of the person?</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-cell scripture-col">Faith alone. Ephesians 2:8–9 — by grace through faith, not of works. Romans 10:9 — confess and believe. Nothing more. Nothing less. A dying thief qualifies.</div>
+      <div class="sc-cell apocrypha-col">Works — almsgiving, honoring parents, ritual observance, prayer for the dead. Human effort as the mechanism of atonement alongside or instead of grace.</div>
+      <div class="sc-cell gnostic-col">Gnosis — secret spiritual knowledge. The ability to receive and understand hidden revelation. Spiritual achievement available only to the enlightened few.</div>
+    </div>
+
+    <div class="sc-row">
+      <div class="sc-topic">Does it pass the acid test?</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-cell scripture-col">All three. Simple enough for a dying thief. Consistent across 1,500 years. Available to whosoever will. Freely given by grace through faith.</div>
+      <div class="sc-cell apocrypha-col">Fails the simplicity test — works and merit narrow the door. Fails the consistency test — contradicts Ephesians 2:8–9 and Hebrews 9:27 directly.</div>
+      <div class="sc-cell gnostic-col">Fails all three simultaneously. Not simple — requires elite knowledge. Not consistent — contradicts every gospel. Not universal — reserved for the enlightened.</div>
+    </div>
+  </div>
+
+  <h2>The Thief on the Cross — The Simplicity Test in Person</h2>
+
+  <p>Every argument about salvation eventually comes to this man. Because he is the test case that every alternative to the gospel fails.</p>
+
+  <div class="scripture">
+    <p class="scripture-text">And he said unto Jesus, Lord, remember me when thou comest into thy kingdom. And Jesus said unto him, Verily I say unto thee, To day shalt thou be with me in paradise.</p>
+    <p class="scripture-ref">Luke 23:42–43 — KJV</p>
+  </div>
+
+  <p>This man had no time for almsgiving. He had given nothing to the poor. He could not honor his father and mother — he was nailed to a cross. He had no access to secret knowledge. No Gnostic teacher had enlightened him. He had not been properly initiated into anything. He was a criminal dying in public in the most degrading manner Rome could devise.</p>
+
+  <p>He had minutes. He had a request. He had faith.</p>
+
+  <p>And Jesus said — today.</p>
+
+  <p>Not after a period of purification. Not after his living relatives prayed for him. Not after he had demonstrated sufficient wisdom and righteousness. Today. The word left no room for purgatory, no room for earned merit, no room for secret knowledge, no room for elite spiritual achievement.</p>
+
+  <p>Today shalt thou be with me in paradise.</p>
+
+  <p>If the apocryphal salvation framework is correct this man had no hope. He had done nothing to atone for his sins. He had given no alms. He had accumulated no merit. If the Gnostic framework is correct this man was hopelessly unenlightened — a common criminal with no access to secret knowledge. Under either framework he dies without hope and without recourse.</p>
+
+  <p>Under the gospel of Scripture he hears the most important word ever spoken to a dying man.</p>
+
+  <p>Today.</p>
+
+  <h2>The Self-Verification of the Canon</h2>
+
+  <p>The men who established the canon of Scripture were not guessing. They were applying a standard that the texts themselves demanded — and the most powerful evidence for the canon is that Scripture verifies itself in a way nothing else does or even attempts.</p>
+
+  <div class="verdict">
+    <p class="verdict-label">The Court's Finding</p>
+    <h3>Sixty-Six Books. One Consistent Testimony.</h3>
+    <p>Genesis says sin entered through one man and the seed of the woman will crush the enemy. Paul in Romans says the same. Isaiah describes the substitutionary suffering of a coming servant. The Gospel of John identifies that servant. The Law requires blood for atonement. Hebrews explains why. The Psalms cry out for a redeemer. The Gospels record his arrival. The prophets describe a new covenant written on hearts. Jeremiah says so. Jesus quotes Jeremiah at the Last Supper. The Book of Revelation closes with the same open invitation that the Garden of Eden required — come.</p>
+    <p>Forty authors. Three languages. Fifteen hundred years. Three continents. Kings and shepherds. Fishermen and scholars. Tax collectors and priests. None of them could have coordinated this. None of them lived long enough to read all of it. None of them could have known that their piece of the testimony would fit so precisely with pieces written centuries before and after them.</p>
+    <p>The consistency is not the product of human planning. It is the fingerprint of a single divine Author. And it is the reason the canon closed where it did — not because a council decided what to include, but because the testimony was so coherent, so self-verifying, so unlike anything produced alongside it, that the covenant community recognized it as a body and received it as one.</p>
+    <p>The apocryphal texts were measured against this standard and found in a different category. Not because they were attacked. Because they contradicted the testimony on its most essential point — how a person stands before God. Sirach's almsgiving contradicts Ephesians 2:8-9. Second Maccabees' prayer for the dead contradicts Hebrews 9:27. The Gnostic gospels' secret knowledge contradicts John 3:16. You cannot have all of these in the same canon. The witnesses cannot all be right when they contradict each other on the most important question any of them answers.</p>
+    <p>The verdict of the canon is not the verdict of an institution. It is the verdict of the evidence itself.</p>
+  </div>
+
+  <div class="conclusion">
+    <h2>The Open Door</h2>
+
+    <p>Four articles have been building to this moment. The Book of Enoch cannot answer where it came from. The pre-flood witnesses contradict each other on the most fundamental facts. The apocrypha's most honest book admits there were no prophets in the era that produced it. And Gnosticism — the oldest counterfeit — offers what the serpent offered in the garden. Hidden knowledge. Elite access. A deeper truth the institution buried.</p>
+
+    <p>All of it fails the acid test. Every alternative to the gospel — whether it adds works to faith, reserves salvation for the enlightened, or claims ancient authority it cannot demonstrate — narrows a door that God threw open wide.</p>
+
+    <p>The gospel of Scripture passes every test simultaneously. It is simple enough for a dying thief. It is consistent across fifteen hundred years of witnesses who never met each other. And it is available to whosoever will — no qualification, no initiation, no secret knowledge, no accumulated merit required.</p>
+
+    <p>That is not the gospel of an institution protecting its power. That is the gospel of a God who so loved the world that He gave. Openly. Publicly. For everyone. A God who took on flesh — real flesh, flesh our hands could handle — and died a real death and rose in a real body so that the door could be open to all.</p>
+
+    <p>The court has examined every witness. The testimony has been tested. The verdict is in. And the verdict is grace.</p>
+  </div>
+
+  <div class="invitation">
+    <p class="invitation-label">The Invitation</p>
+    <h3>The Door Is Open</h3>
+    <p>If you have followed this series through four articles and found yourself asking the question the articles were always pointing toward — how do I stand before God — the answer is the same one that has been consistent across fifteen hundred years of Scripture.</p>
+    <p>You cannot earn it. You cannot find it in a hidden text. You cannot achieve it through accumulated wisdom or religious merit. You cannot inherit it or initiate into it. It is a gift. Freely given. To whosoever will.</p>
+    <p>Confess with your mouth the Lord Jesus. Believe in your heart that God raised him from the dead. That is the requirement. The thief on the cross met it in minutes. You can meet it right now.</p>
+    <div class="inv-verse">"For whosoever shall call upon the name of the Lord shall be saved."</div>
+    <p class="inv-ref">Romans 10:13 — KJV</p>
+  </div>
+
+</article>
+
+<footer>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-gem"></div>
+    <div class="divider-line r"></div>
+  </div>
+  <p>All Scripture quoted from the King James Version. &nbsp;·&nbsp; Part of the <em>Rightly Divided</em> series.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('vis');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+
+  document.querySelectorAll('p, h2, .scripture, .acid-test, .thread, .salvation-contrast, .verdict, .invitation, .conclusion, footer')
+    .forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
