@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The War for the Word — Rightly Divided</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --parchment: #f5eed8;
+    --aged: #e8ddc0;
+    --rust: #8b3a1a;
+    --gold: #b8860b;
+    --ash: #6b6050;
+    --cream: #faf6eb;
+    --deep: #1c1108;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--parchment);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(184,134,11,0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 90%, rgba(139,58,26,0.06) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    color: var(--ink);
+    font-family: 'EB Garamond', Georgia, serif;
+    min-height: 100vh;
+    padding: 0 0 100px;
+  }
+
+  /* ── SERIES NAV ── */
+  .series-nav {
+    background: var(--ink);
+    text-align: center;
+    padding: 10px 24px;
+  }
+  .series-nav p {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    line-height: 1.8;
+  }
+  .series-nav a {
+    color: rgba(245,238,216,0.55);
+    text-decoration: none;
+    margin: 0 4px;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+  }
+  .series-nav a:hover { color: var(--gold); }
+  .series-nav .current { color: var(--gold); border-bottom: 1px solid var(--gold); }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 64px 24px 52px;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--rust) 50%, var(--gold) 70%, transparent 100%);
+  }
+  .kicker {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s ease forwards;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.1rem, 6.5vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.08;
+    color: var(--ink);
+    max-width: 800px;
+    margin: 0 auto 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.25s ease forwards;
+  }
+  h1 em { font-style: italic; color: var(--rust); }
+  .subtitle {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.18rem;
+    color: var(--ash);
+    max-width: 600px;
+    margin: 0 auto 28px;
+    line-height: 1.65;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+  }
+  .byline {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    color: var(--ash);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s ease forwards;
+  }
+  .byline span { color: var(--rust); font-weight: 500; }
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    justify-content: center;
+    margin: 0 0 12px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.58s ease forwards;
+  }
+  .divider-line { width: 90px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .divider-line.r { background: linear-gradient(90deg, var(--gold), transparent); }
+  .divider-gem { width: 8px; height: 8px; background: var(--gold); transform: rotate(45deg); }
+
+  /* ── ARTICLE ── */
+  article { max-width: 700px; margin: 0 auto; padding: 0 24px; }
+
+  .lead {
+    font-size: 1.28rem;
+    line-height: 1.78;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.65s ease forwards;
+  }
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.88;
+    margin-bottom: 24px;
+    color: #28190e;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+    animation-play-state: paused;
+  }
+  p.vis { animation-play-state: running; }
+
+  /* ── SCRIPTURE ── */
+  .scripture {
+    margin: 40px 0;
+    padding: 28px 32px 28px 44px;
+    border-left: 3px solid var(--rust);
+    background: rgba(139,58,26,0.045);
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  .scripture.vis { animation-play-state: running; }
+  .scripture::before {
+    content: '\201C';
+    position: absolute;
+    top: -8px; left: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 5.5rem;
+    color: var(--rust);
+    opacity: 0.18;
+    line-height: 1;
+  }
+  .scripture-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.78;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .scripture-ref {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 500;
+  }
+
+  /* ── SECTION HEADERS ── */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.72rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 56px 0 22px;
+    line-height: 1.25;
+    position: relative;
+    padding-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  h2.vis { animation-play-state: running; }
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 52px; height: 2px;
+    background: var(--gold);
+  }
+
+  /* ── BATTLE MARKER ── */
+  .battle-marker {
+    text-align: center;
+    margin: 56px 0 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  .battle-marker.vis { animation-play-state: running; }
+  .battle-era {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .battle-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--ink);
+    font-style: italic;
+  }
+  .battle-divider {
+    width: 48px;
+    height: 2px;
+    background: var(--rust);
+    margin: 14px auto 0;
+  }
+
+  /* ── SPIRITUAL PLANE BOX ── */
+  .spiritual {
+    background: var(--deep);
+    border-top: 3px solid var(--gold);
+    padding: 32px 30px;
+    margin: 44px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .spiritual.vis { animation-play-state: running; }
+  .spiritual-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .spiritual p {
+    color: #e8d8b8;
+    margin-bottom: 14px;
+    opacity: 1;
+    animation: none;
+    font-size: 1.08rem;
+    line-height: 1.82;
+  }
+  .spiritual p:last-child { margin-bottom: 0; }
+  .spiritual .s-scripture {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: #f0e4c8;
+    line-height: 1.72;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .spiritual .s-ref {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(184,134,11,0.7);
+  }
+
+  /* ── MARTYR BOX ── */
+  .martyr {
+    background: var(--aged);
+    border: 1px solid rgba(184,134,11,0.22);
+    border-left: 4px solid var(--rust);
+    padding: 28px 26px;
+    margin: 36px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .martyr.vis { animation-play-state: running; }
+  .martyr-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: var(--rust);
+    margin-bottom: 6px;
+  }
+  .martyr-date {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-bottom: 14px;
+    display: block;
+  }
+  .martyr p { margin-bottom: 12px; opacity: 1; animation: none; color: #28190e; }
+  .martyr p:last-child { margin-bottom: 0; }
+  .martyr-words {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+    line-height: 1.7;
+    border-top: 1px solid rgba(139,58,26,0.2);
+    padding-top: 14px;
+    margin-top: 14px;
+  }
+
+  /* ── CLOSE CALL BOX ── */
+  .close-call {
+    background: var(--cream);
+    border: 1px solid rgba(139,58,26,0.2);
+    border-top: 3px solid var(--rust);
+    padding: 28px 26px;
+    margin: 36px 0;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .close-call.vis { animation-play-state: running; }
+  .close-call-label {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .close-call h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 14px;
+    line-height: 1.3;
+  }
+  .close-call p { margin-bottom: 12px; opacity: 1; animation: none; color: #28190e; }
+  .close-call p:last-child { margin-bottom: 0; }
+
+  /* ── THESIS STATEMENT ── */
+  .thesis {
+    background: var(--rust);
+    padding: 36px 32px;
+    margin: 52px 0;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .thesis.vis { animation-play-state: running; }
+  .thesis p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: #faf0dc;
+    line-height: 1.72;
+    margin: 0;
+    opacity: 1;
+    animation: none;
+  }
+
+  /* ── CONCLUSION ── */
+  .conclusion {
+    margin-top: 56px;
+    padding-top: 44px;
+    border-top: 1px solid rgba(184,134,11,0.35);
+  }
+  .conclusion p { font-size: 1.12rem; }
+
+  /* ── FINAL STATEMENT ── */
+  .final-statement {
+    margin: 52px 0 0;
+    padding: 38px 34px;
+    background: var(--deep);
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+    animation-play-state: paused;
+  }
+  .final-statement.vis { animation-play-state: running; }
+  .final-statement p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.22rem;
+    color: #e8d8b8;
+    line-height: 1.75;
+    margin: 0;
+    opacity: 1;
+    animation: none;
+  }
+  .final-statement p em { color: var(--gold); }
+
+  footer {
+    text-align: center;
+    margin-top: 64px;
+    padding: 0 24px;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+    animation-play-state: paused;
+  }
+  footer.vis { animation-play-state: running; }
+  footer .divider { margin-bottom: 22px; opacity: 1; animation: none; }
+  footer p { font-family: 'EB Garamond', serif; font-style: italic; color: var(--ash); font-size: 0.92rem; opacity: 1; animation: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    header { padding: 52px 18px 40px; }
+    article { padding: 0 18px; }
+    .scripture { padding: 22px 18px 22px 28px; }
+    .martyr, .close-call, .spiritual { padding: 24px 18px; }
+    .thesis, .final-statement { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="series-nav">
+  <p>Rightly Divided &nbsp;·&nbsp;
+    <a href="book-of-enoch.html">I</a> &nbsp;·&nbsp;
+    <a href="when-the-witnesses-disagree">II</a> &nbsp;·&nbsp;
+    <a href="two-different-plains.html">III</a> &nbsp;·&nbsp;
+    <a href="the-verdict.html">IV</a> &nbsp;·&nbsp;
+    <a href="the-whole-gospel.html">V</a> &nbsp;·&nbsp;
+    <span class="current">VI</span>
+  </p>
+</div>
+
+<header>
+  <p class="kicker">Rightly Divided — Article Six</p>
+  <h1>The War for <em>the Word</em></h1>
+  <p class="subtitle">The Bible did not survive twenty centuries by accident. Someone has always been trying to destroy it. Someone has always paid to keep it alive.</p>
+  <p class="byline">By <span>John Stewart</span></p>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-gem"></div>
+    <div class="divider-line r"></div>
+  </div>
+</header>
+
+<article>
+
+  <p class="lead">Every previous article in this series has been building toward a question that most people never think to ask. Not whether the Bible is true. Not whether it was inspired. But whether it could have survived at all. Whether the text you hold in your hands today had any reasonable right to make it from the ancient world to yours — intact, recognizable, and freely available.</p>
+
+  <p>The honest answer is that it survived against every odd. Against deliberate, systematic, sustained assault across twenty centuries. Against empires with armies, institutions with authority, and a spiritual enemy who understood exactly what the Word of God is and what it does and why it had to be stopped.</p>
+
+  <p>This is the story of that war. The visible battles on the physical plane. The invisible conflict on the spiritual one. The men who died in it. The close calls that almost ended it. And the promise that held through all of it — that the God who inspired the Word would not permit it to be lost.</p>
+
+  <div class="scripture">
+    <p class="scripture-text">For we wrestle not against flesh and blood, but against principalities, against powers, against the rulers of the darkness of this world, against spiritual wickedness in high places.</p>
+    <p class="scripture-ref">Ephesians 6:12 — KJV</p>
+  </div>
+
+  <h2>The War Behind the War</h2>
+
+  <p>To understand the physical attacks on Scripture across history you have to understand what Scripture does that nothing else does. Romans 10:17 — faith cometh by hearing and hearing by the word of God. The Word of God is the primary instrument by which people come to saving faith. Destroy the Word and you destroy the means by which the lost find their way home.</p>
+
+  <p>That is not a passive observation. It is a strategic reality that Scripture itself identifies. The enemy of human souls understood it from the beginning.</p>
+
+  <div class="spiritual">
+    <span class="spiritual-label">The Spiritual Plane</span>
+    <span class="s-scripture">"Yea, hath God said...?"</span>
+    <span class="s-ref">Genesis 3:1 — KJV</span>
+    <p>The first attack on the Word of God was not physical. It was linguistic. A question designed to introduce doubt about what God had actually said. The enemy did not come with fire or edicts. He came with a reinterpretation — a subtle corruption of the meaning of the Word that left the words themselves technically intact while emptying them of their authority.</p>
+    <p>Every attack on Scripture since the garden has followed the same pattern. When fire and sword cannot destroy the text, question its meaning. When the meaning cannot be questioned, restrict its access. When access cannot be restricted, replace it with a counterfeit. The weapons change. The strategy does not.</p>
+    <p>Paul identified the true nature of this conflict explicitly — we wrestle not against flesh and blood. Diocletian did not decide on his own to burn Scriptures. The medieval church did not accidentally imprison the Word in Latin. Tyndale's enemies did not spontaneously organize against an English Bible. Behind every human instrument of opposition stands the spiritual reality Paul described — principalities and powers whose goal has always been to prevent the Word that saves from reaching the people it would save.</p>
+  </div>
+
+  <!-- ═══ BATTLE 1 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">The First Century</span>
+    <span class="battle-title">The Blood of the Witnesses</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <p>The war for the Word began before the ink was dry. The apostles who wrote the New Testament died for what they wrote. James executed by Herod around 44 CE. Peter crucified upside down in Rome. Paul beheaded. They did not die defending an institution. They died because what they had written and preached had produced transformations in thousands of people that the powers of that age could not tolerate and could not explain.</p>
+
+  <p>The Roman empire understood very clearly that a text claiming the resurrection of Jesus Christ — that the crucified criminal had risen bodily from the dead and was Lord over Caesar — was an existential threat to the social order built on Caesar's authority. The persecution of the early church was not religious bigotry. It was political suppression of a document whose central claim could not coexist with the claim that Caesar was lord.</p>
+
+  <p>The first century church understood this too. They copied the letters and gospels immediately and circulated them widely — not naively but strategically. They understood that if the text existed in only one place it could be destroyed in one raid. Distribution was preservation. Every copy made the Word harder to kill.</p>
+
+  <!-- ═══ BATTLE 2 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">107 CE</span>
+    <span class="battle-title">Ignatius of Antioch</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <div class="martyr">
+    <p class="martyr-name">Ignatius of Antioch</p>
+    <span class="martyr-date">Martyred approximately 107 CE — Rome</span>
+    <p>Bishop of Antioch. Student of the apostle John. On his way to Rome to be fed to lions he wrote seven letters to churches across Asia Minor quoting the New Testament extensively and treating it as authoritative Scripture. He was not defending a manuscript. He was defending what the manuscript said — that Jesus Christ was truly God and truly man, truly crucified and truly risen.</p>
+    <p>His letters are among the most important documents of the early church — not because he was famous but because they demonstrate that by 107 CE the New Testament was already functioning as recognized Scripture in churches across the eastern Mediterranean. The text was alive and in use before any council convened to recognize it.</p>
+    <p class="martyr-words">"I am the wheat of God, and let me be ground by the teeth of the wild beasts, that I may be found the pure bread of Christ."</p>
+  </div>
+
+  <!-- ═══ BATTLE 3 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">155 CE</span>
+    <span class="battle-title">Polycarp of Smyrna</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <div class="martyr">
+    <p class="martyr-name">Polycarp of Smyrna</p>
+    <span class="martyr-date">Burned at the stake approximately 155 CE — Smyrna</span>
+    <p>Disciple of the apostle John. The personal chain of transmission ran directly from Jesus to John to Polycarp. When the proconsul offered him his life if he would deny Christ and curse the name of Jesus, Polycarp refused. He was tied to the stake and the fire was lit. Eyewitnesses reported the flames rose around him like a ship's sail filled with wind without touching him until he was stabbed.</p>
+    <p>He was not dying for a theological position. He was dying for something he had received directly from a man who had seen the risen Christ with his own eyes. That kind of certainty does not come from a book alone. It comes from a living chain of testimony running back to an empty tomb.</p>
+    <p class="martyr-words">"Eighty-six years have I served Him and He has never done me wrong. How can I blaspheme my King who saved me?"</p>
+  </div>
+
+  <!-- ═══ BATTLE 4 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">303 — 313 CE</span>
+    <span class="battle-title">The Diocletian Persecution — The Closest Call</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <div class="close-call">
+    <span class="close-call-label">Close Call</span>
+    <h3>The Emperor Who Tried to Erase the Bible</h3>
+    <p>In 303 CE the Emperor Diocletian issued four edicts against Christianity. The first specifically ordered all Christian Scriptures surrendered and burned. Imperial officers went church by church, community by community, demanding the texts. This was not a local persecution. It was a systematic, empire-wide campaign to physically destroy every copy of the canonical Scripture in existence.</p>
+    <p>Those who surrendered their Scriptures were called traditores — traitors. The word has come down to us as traitor. Those who refused died. The text they refused to surrender was the canonical New Testament — not the Gospel of Thomas, not the Book of Enoch, not any Gnostic text. The empire did not waste its resources burning apocryphal literature. It targeted the canonical Scripture specifically because the canonical Scripture was producing the kind of transformation that threatened Caesar's world.</p>
+    <p>Diocletian reportedly declared after burning a collection of Scriptures — I have exterminated the Christian writings from the face of the earth. He had not. The text had already multiplied too widely across too many languages and too many communities to be contained. But it was close enough that he believed it.</p>
+    <p>Within ten years Constantine had issued the Edict of Milan granting Christians freedom of worship. Within twenty-five years he had commissioned Eusebius to produce fifty copies of the Christian Scriptures for churches in Constantinople. The emperor who ordered the Bible burned was succeeded within a generation by an emperor who ordered it copied and distributed.</p>
+  </div>
+
+  <div class="spiritual">
+    <span class="spiritual-label">The Spiritual Plane</span>
+    <p>The Diocletian persecution is the clearest historical illustration of what Paul described in Ephesians 6. The physical attack — soldiers, edicts, fires — was real. But behind it stood the spiritual reality that a text producing the wholesale transformation of the Roman empire's subjects had to be stopped. The empire was not merely threatened politically. The principalities and powers whose domain rested on Caesar's authority as ultimate lord were threatened at their foundation by a document that said Caesar was not lord. Christ was.</p>
+    <p>The persecution failed for the same reason every physical attack on the Word has failed. You cannot burn what God has promised to preserve. The text was already too widely distributed, too deeply embedded in too many communities across too many languages to be extinguished by any empire's reach.</p>
+  </div>
+
+  <!-- ═══ BATTLE 5 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">4th Century</span>
+    <span class="battle-title">Athanasius Contra Mundum</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <p>Not every attack on Scripture came from outside the church. Some of the most dangerous assaults came from within — theological corruptions that would have changed not the physical text but its meaning, which amounts to the same thing.</p>
+
+  <p>Arius was a priest in Alexandria who taught that Jesus Christ was a created being — the highest of God's creations, exalted above all others, but a creature nonetheless. Not fully God. Not eternal. The implications for the gospel are catastrophic. A created savior cannot bear the infinite weight of human sin. A creature cannot reconcile fallen humanity to its Creator. If Arius was right the cross accomplished nothing.</p>
+
+  <p>At the peak of the Arian controversy it had the support of the Emperor Constantius and controlled the majority of the institutional church. Bishops across the empire signed Arian creeds under imperial pressure. The orthodox position — that Christ is fully God, eternally begotten, of one substance with the Father, exactly as the canonical Scripture teaches — was held by a shrinking minority.</p>
+
+  <div class="martyr">
+    <p class="martyr-name">Athanasius of Alexandria</p>
+    <span class="martyr-date">Exiled five times — 296–373 CE</span>
+    <p>Athanasius was exiled five times by four different emperors for refusing to compromise the biblical testimony about the nature of Christ. He did not have an army. He did not have imperial support. He had the text of Scripture and the conviction that what it said about Christ was non-negotiable regardless of what the emperors demanded.</p>
+    <p>His phrase — Athanasius contra mundum, Athanasius against the world — became the description of a man who held the line of what Scripture actually taught when the entire institutional machinery of church and empire was aligned against him.</p>
+    <p>He outlived every emperor who exiled him. The Arian emperors died. The orthodox position was restored. The canonical Scripture's testimony about Christ was upheld — not because the institution protected it but because one man refused to surrender what it said.</p>
+    <p class="martyr-words">"If the world is against the truth, then I am against the world."</p>
+  </div>
+
+  <!-- ═══ BATTLE 6 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">Medieval Period</span>
+    <span class="battle-title">The Latin Captivity</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <div class="close-call">
+    <span class="close-call-label">Close Call</span>
+    <h3>The Word Imprisoned in a Language the People Could Not Read</h3>
+    <p>For approximately a thousand years the Bible existed in Western Europe almost exclusively in Jerome's Latin Vulgate. Ordinary people could not read Latin. The text was technically available but practically inaccessible to the vast majority of Christians. John Wycliffe in the 14th century documented priests who could not explain the Lord's Prayer in English to their own congregations. The Word existed but had been effectively imprisoned in a language the people did not speak.</p>
+    <p>This was not an accident. An illiterate laity dependent on the institutional church for all access to Scripture was a laity that could be told Scripture said whatever the institution needed it to say. The imprisonment of the Word in Latin was both a consequence of institutional drift and a mechanism of institutional control.</p>
+    <p>Wycliffe translated it into English and was declared a heretic. He died before they could execute him so forty-four years after his death they dug up his bones, burned them, and threw the ashes into the River Swift. That is how seriously the institutional church of that era treated the threat of ordinary people reading Scripture for themselves.</p>
+    <p>His followers — called Lollards — carried handwritten copies of his English Bible at the cost of their lives. Some were burned at the stake with their Bibles tied around their necks. They were not dying for an institution. They were dying because they had read the text and what they found there could not be taken back.</p>
+  </div>
+
+  <!-- ═══ BATTLE 7 ═══ -->
+  <div class="battle-marker">
+    <span class="battle-era">1536</span>
+    <span class="battle-title">William Tyndale — The Man Who Gave Us Our Bible</span>
+    <div class="battle-divider"></div>
+  </div>
+
+  <div class="martyr">
+    <p class="martyr-name">William Tyndale</p>
+    <span class="martyr-date">Strangled and burned — Vilvoorde, Belgium, October 1536</span>
+    <p>William Tyndale believed with absolute conviction that every ordinary English person deserved to read the Word of God in their own language. He translated the New Testament directly from the Greek — the Textus Receptus, the majority manuscript tradition the church had lived by for a thousand years — and printed it in 1526. He worked in hiding, supported by sympathetic merchants, moving between safe houses across Europe to avoid arrest.</p>
+    <p>When the Bishop of London Cuthbert Tunstall purchased as many copies as he could find and burned them publicly at St Paul's Cross, he believed he was destroying the translation. He was actually funding it. Tyndale used the money from the sales to print better editions. The enemy's attempt to destroy the Word financed its improvement and wider distribution.</p>
+    <p>Tyndale was eventually betrayed, captured, and condemned. He was strangled at the stake and his body burned. He was forty-two years old. He had spent his entire adult life being hunted for the crime of making Scripture available to ordinary people.</p>
+    <p class="martyr-words">"Lord, open the King of England's eyes."</p>
+  </div>
+
+  <h2>Tyndale's Prayer Was Answered</h2>
+
+  <p>Tyndale died in October 1536 believing he had failed. He had not seen his New Testament welcomed. He had not seen an English Bible in every church. He had not seen the King of England's eyes opened. He died in a prison yard in Belgium with a prayer on his lips and no visible evidence it would be answered.</p>
+
+  <p>In 1537 — less than twelve months after his execution — King Henry VIII authorized the Matthew Bible for distribution in England. It was essentially Tyndale's translation under a pseudonym. The king whose eyes Tyndale prayed would be opened authorized the very work Tyndale had died producing.</p>
+
+  <p>In 1538 Henry VIII ordered a copy of the English Bible placed in every church in England. The thing Tyndale had been hunted and killed for — an English Bible accessible to every ordinary person — became royal mandate within two years of his death.</p>
+
+  <p>In 1611 the King James Bible was completed by fifty-four of the finest biblical scholars in England working from the Textus Receptus. Scholars have calculated that approximately 83 percent of the King James New Testament is Tyndale's original translation, largely unchanged. The man who was burned for translating Scripture became the primary voice of the most widely distributed Bible in the history of the English language.</p>
+
+  <p>He planted a candle. He did not live to see it lit. But Hugh Latimer, burning at the stake in Oxford nineteen years after Tyndale, saw it clearly enough to say so.</p>
+
+  <div class="scripture">
+    <p class="scripture-text">"Be of good comfort, Master Ridley, and play the man. We shall this day light such a candle by God's grace in England as I trust shall never be put out."</p>
+    <p class="scripture-ref">Hugh Latimer — Oxford, October 16, 1555</p>
+  </div>
+
+  <h2>No One Died for the Book of Enoch</h2>
+
+  <p>There is a question worth sitting with in the middle of all these names and dates and fires.</p>
+
+  <p>Who died for the Book of Enoch?</p>
+
+  <p>The answer, to the best of documented historical knowledge, is no one. Not one person burned at the stake for possessing it. Not one community that stood in the open and bled for the Gospel of Thomas. Not one scribe tradition that counted its letters and buried imperfect copies rather than let a corrupted version of the Life of Adam and Eve survive. Not one martyr whose final words defended the authority of Second Maccabees.</p>
+
+  <p>The Gnostic communities at Nag Hammadi did not die for their texts. They buried them in a clay jar in the Egyptian desert around 390 CE — hiding what they had because they knew the mainstream community would not receive it. They were not martyrs standing in the open. They were people digging a hole in the dark.</p>
+
+  <p>The canonical Scripture has a blood trail stretching from the apostles to the Reformation. Across every culture and language the gospel reached, people received these specific sixty-six books as the Word of God and died rather than surrender them.</p>
+
+  <p>The apocrypha has a jar in the desert.</p>
+
+  <p>The contrast is not subtle. And it answers the question that all the manuscript arguments and historical evidence is building toward. You don't die for something you aren't certain of. You don't die for something that hasn't changed you. You don't die for something that is merely interesting or edifying or historically valuable.</p>
+
+  <p>You die for something that got inside you and would not leave. Something that reached into the deepest part of you and produced a certainty that no threat could undo.</p>
+
+  <p>The canonical Scripture produced that certainty in generation after generation across twenty centuries. In fishermen and bishops and miners and translators and archbishops and ordinary people who could not have told you the difference between a Masoretic codex and a Byzantine manuscript but knew without question that what they held in their hands was the living Word of God.</p>
+
+  <div class="thesis">
+    <p>Copied, counterfeited, and slandered across twenty centuries — and still freely available to whosoever will.</p>
+  </div>
+
+  <div class="conclusion">
+    <h2>The Promise That Held</h2>
+
+    <p>Every attack on the Word failed. Not because the people defending it were stronger than the people attacking it. Polycarp was one man against an empire. Athanasius was one man against an emperor and a compromised church. Tyndale was one man in hiding against the combined institutional authority of the English crown and the Catholic church. By every human measure they should have lost.</p>
+
+    <p>They did not lose because the God who promised to preserve His Word is sovereign over every empire, every emperor, every edict, and every fire. The promise made in Psalm 12 was being kept through every century of attack — not by human strength but by the same divine faithfulness that spoke the word in the first place.</p>
+
+    <div class="scripture">
+      <p class="scripture-text">The words of the LORD are pure words: as silver tried in a furnace of earth, purified seven times. Thou shalt keep them, O LORD, thou shalt preserve them from this generation for ever.</p>
+      <p class="scripture-ref">Psalm 12:6–7 — KJV</p>
+    </div>
+
+    <p>The parable of the talents is the preservation story told by Jesus Himself. The servants who multiplied what they were given — who copied it, translated it, preached it, carried it across oceans, died rather than surrender it — heard the master's words. Well done, good and faithful servant. The one who buried his talent in the ground heard something different.</p>
+
+    <p>The Gnostic communities buried their texts. The traditors surrendered theirs. The institutional church imprisoned the Word in Latin for a thousand years. Every strategy of hiding, suppressing, restricting, and burying the Word has produced the same result — the talent returns no increase and the master is not pleased.</p>
+
+    <p>The servants who multiplied the talent — Polycarp, Athanasius, Wycliffe, Tyndale, Latimer, Ridley — gave everything. Some of them gave their lives. And the talent they cast into the world has multiplied beyond anything they could have imagined.</p>
+
+    <p>The Word that Tyndale translated in hiding is read by hundreds of millions. The candle Latimer lit from the stake in Oxford has never gone out. The text that Diocletian declared exterminated from the face of the earth is the most widely distributed document in human history.</p>
+
+    <p>That is not a coincidence. That is a covenant kept.</p>
+  </div>
+
+  <div class="final-statement">
+    <p>The armies burned it.<br>
+    The institutions buried it.<br>
+    The counterfeits tried to replace it.<br>
+    The skeptics declared it finished.<br><br>
+    <em>It is still here. Still free. Still transforming.</em><br><br>
+    Whosoever will.</p>
+  </div>
+
+</article>
+
+<footer>
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-gem"></div>
+    <div class="divider-line r"></div>
+  </div>
+  <p>All Scripture quoted from the King James Version. &nbsp;·&nbsp; Part of the <em>Rightly Divided</em> series.</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('vis');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07 });
+
+  document.querySelectorAll('p, h2, .scripture, .battle-marker, .spiritual, .martyr, .close-call, .thesis, .final-statement, footer')
+    .forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
